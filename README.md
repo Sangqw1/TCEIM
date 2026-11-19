@@ -1,4 +1,4 @@
-# SCEIM
+# TCEIM
 
 This repository contains two MATLAB functions for State Consistency Evidence-Based Integrity Monitoring for Robust GNSS/INS Integrated Positioning.
 
