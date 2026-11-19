@@ -32,36 +32,6 @@ protection-level (PL) solver are supplied by the application.
 The datasets and frameworks listed in [Notes](#notes) provide context for the
 GNSS/INS experiments; they are not runtime dependencies of these functions.
 
-## Quick Start
-
-Open MATLAB in the directory containing the two functions, then run:
-
-```matlab
-% 1. Initialize the mixture prior before the current VB update.
-u      = [0.4; 3.5; 1.2];       % Normalized innovations
-q_prev = [0.95; 0.25; NaN];     % Previous Gaussian responsibilities
-gap    = [1; 2; NaN];          % Elapsed steps; channel 3 has no history
-[a0,b0,aM,K] = TCMP(u,q_prev,gap,0.95,0.90,5);
-
-% 2. Run your VB update with a0/b0 to obtain the converged q.
-% This q is illustrative: replace it with your filter's output.
-q = [0.98; 0.20; 0.85];
-
-% 3. Reallocate the monitored fault-hypothesis probabilities.
-keep = [1 1 1;                 % H0: no excluded channel
-        0 1 1;                 % H1: channel 1 excluded
-        1 0 1;                 % H2: channel 2 excluded
-        1 1 0];                % H3: channel 3 excluded
-p_prior = [0.999; 0.0004; 0.0003; 0.0002];
-[p_bar,w] = HWRA(q,keep,p_prior);
-
-assert(p_bar(1)==p_prior(1));
-assert(abs(sum(p_bar(2:end))-sum(p_prior(2:end)))<1e-12);
-```
-
-Pass `p_bar` to the existing PL solver. Store the converged `q`, together with
-satellite IDs and timestamps, for the next epoch. This example does not run a
-navigation filter or compute a protection level.
 
 ## TCMP: Temporally Correlated Mixture Prior
 
